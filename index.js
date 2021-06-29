@@ -10,8 +10,10 @@ class CountdownTimer {
     this.selector = selector;
     this.targetDate = targetDate;
     this.intervalId = null;
-    start();
+    this.start();
+    this.init();
   }
+
   start() {
     this.intervalId = setInterval(() => {
       const time = this.targetDate - Date.now();
@@ -23,6 +25,10 @@ class CountdownTimer {
       this.onTimeTick(timeComponent);
     }, 1000);
   }
+
+  init() {
+    const timeComponent = this.getTimeComponents(0);
+  }
 }
 function onTimeTick({ days, hours, mins, secs }) {
   refs.days.textContent = days;
@@ -30,10 +36,6 @@ function onTimeTick({ days, hours, mins, secs }) {
   refs.mins.textContent = mins;
   refs.secs.textContent = secs;
 }
-// const timer = new CountdownTimer({
-//   selector: '#timer-1',
-//   targetDate: new Date('Jul 17, 2019'),
-// });
 
 function getTimeComponents(time) {
   const days = Math.floor(time / (1000 * 60 * 60 * 24));
@@ -43,3 +45,8 @@ function getTimeComponents(time) {
 
   return { days, hours, mins, secs };
 }
+
+const timer = new CountdownTimer({
+  selector: '#timer-1',
+  targetDate: new Date('Jul 17, 2019'),
+});
