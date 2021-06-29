@@ -10,40 +10,50 @@ class CountdownTimer {
     this.selector = selector;
     this.targetDate = targetDate;
     this.intervalId = null;
-    this.start();
-    this.init();
+    // this.start();
   }
 
   start() {
     this.intervalId = setInterval(() => {
-      const time = this.targetDate - Date.now();
-      if (time <= 0) {
+      if (
+        refs.days.textContent === '00' &&
+        refs.hours.textContent === '00' &&
+        refs.mins.textContent === '00' &&
+        refs.secs.textContent === '00'
+      ) {
+        //  if (time <= 0)
         clearInterval(this.intervalId);
-        return false;
+        return;
       }
+
+      const time = this.pad(this.targetDate) - Date.now();
       const timeComponent = this.getTimeComponents(time);
+
       this.onTimeTick(timeComponent);
     }, 1000);
   }
 
-  init() {
-    const timeComponent = this.getTimeComponents(0);
+  onTimeTick({ days, hours, mins, secs }) {
+    refs.days.textContent = days;
+    refs.hours.textContent = hours;
+    refs.mins.textContent = mins;
+    refs.secs.textContent = secs;
   }
-}
-function onTimeTick({ days, hours, mins, secs }) {
-  refs.days.textContent = days;
-  refs.hours.textContent = hours;
-  refs.mins.textContent = mins;
-  refs.secs.textContent = secs;
-}
 
-function getTimeComponents(time) {
-  const days = Math.floor(time / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const mins = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
-  const secs = Math.floor((time % (1000 * 60)) / 1000);
+  getTimeComponents(time) {
+    const days = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
+    const hours = this.pad(
+      Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+    );
+    const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+    const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
 
-  return { days, hours, mins, secs };
+    return { days, hours, mins, secs };
+  }
+
+  pad(value) {
+    return String(value).padStart(2, '0');
+  }
 }
 
 const timer = new CountdownTimer({
