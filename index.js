@@ -10,27 +10,22 @@ class CountdownTimer {
     this.selector = selector;
     this.targetDate = targetDate;
     this.intervalId = null;
-    // this.start();
   }
 
   start() {
-    this.intervalId = setInterval(() => {
-      if (
-        refs.days.textContent === '00' &&
-        refs.hours.textContent === '00' &&
-        refs.mins.textContent === '00' &&
-        refs.secs.textContent === '00'
-      ) {
-        //  if (time <= 0)
-        clearInterval(this.intervalId);
-        return;
-      }
+    setIntervalTimer();
 
-      const time = this.pad(this.targetDate) - Date.now();
-      const timeComponent = this.getTimeComponents(time);
+    this.intervalId = setInterval(() => this.setIntervalTimer(), 1000);
+  }
+  setIntervalTimer() {
+    const time = this.targetDate - Date.now();
+    if (time <= 0) {
+      clearInterval(this.intervalId);
+      return;
+    }
+    const timeComponent = this.getTimeComponents(time);
 
-      this.onTimeTick(timeComponent);
-    }, 1000);
+    this.onTimeTick(timeComponent);
   }
 
   onTimeTick({ days, hours, mins, secs }) {
@@ -58,5 +53,9 @@ class CountdownTimer {
 
 const timer = new CountdownTimer({
   selector: '#timer-1',
-  targetDate: new Date('Jul 17, 2019'),
+  targetDate: new Date('Jul 17, 2021'),
 });
+
+function setIntervalTimer() {}
+
+timer.start();
